@@ -209,7 +209,9 @@ class BinnedLengthSampler(Sampler):
             bins += [this_bin]
 
         random.shuffle(bins)
-        binned_idx = np.stack(bins).reshape(-1)
+        if len(bins):
+          binned_idx = np.stack(bins).reshape(-1)
+        
 
         if len(binned_idx) < len(idx):
             last_bin = idx[len(binned_idx):]
