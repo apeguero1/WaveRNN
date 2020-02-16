@@ -153,7 +153,8 @@ def voc_train_loop(paths: Paths, model: WaveRNN, loss_func, optimizer, train_set
         save_checkpoint('voc', paths, model, optimizer, is_silent=True)
         model.log(paths.voc_log, msg)
         print(' ')
-
+        if step %1000 ==0:
+          os.system('./save_wavernn.sh')
 
 if __name__ == "__main__":
     main()
