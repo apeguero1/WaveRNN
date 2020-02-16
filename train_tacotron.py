@@ -173,6 +173,8 @@ def tts_train_loop(paths: Paths, model: Tacotron, optimizer, train_set, lr, trai
         save_checkpoint('tts', paths, model, optimizer, is_silent=True)
         model.log(paths.tts_log, msg)
         print(' ')
+        if step %1002 ==0:
+          os.system('./save_tacotron.sh')                                                          
 
 
 def create_gta_features(model: Tacotron, train_set, save_path: Path):
