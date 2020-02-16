@@ -75,10 +75,6 @@ def save_checkpoint(checkpoint_type: str, paths: Paths, model, optimizer, *,
         }
         helper(named_paths, True)
 
-    if checkpoint_type=='voc':
-      os.system('save_wavernn.sh')
-    elif checkpoint_type=='tts':
-      os.system('save_tacotron.sh')
 
 def restore_checkpoint(checkpoint_type: str, paths: Paths, model, optimizer, *,
         name=None, create_if_missing=False):
