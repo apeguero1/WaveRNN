@@ -116,7 +116,7 @@ def tts_train_loop(paths: Paths, model: Tacotron, optimizer, train_set, lr, trai
 
     total_iters = len(train_set)
     epochs = train_steps // total_iters + 1
-
+    prev_step = model.get_step()
     for e in range(1, epochs+1):
 
         start = time.time()
@@ -173,8 +173,11 @@ def tts_train_loop(paths: Paths, model: Tacotron, optimizer, train_set, lr, trai
         save_checkpoint('tts', paths, model, optimizer, is_silent=True)
         model.log(paths.tts_log, msg)
         print(' ')
-        if step %1002 ==0:
+                                                                       
+        if step %1000 < step-prev_step:
           os.system('./save_tacotron.sh')                                                          
+        prev_step = step
+                                                                 
 
 
 def create_gta_features(model: Tacotron, train_set, save_path: Path):
