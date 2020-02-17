@@ -97,11 +97,12 @@ def voc_train_loop(paths: Paths, model: WaveRNN, loss_func, optimizer, train_set
     total_iters = len(train_set)
     epochs = (total_steps - model.get_step()) // total_iters + 1
 
+    prev_step = model.get_step()
     for e in range(1, epochs + 1):
 
         start = time.time()
         running_loss = 0.
-
+       
         for i, (x, y, m) in enumerate(train_set, 1):
             x, m, y = x.to(device), m.to(device), y.to(device)
 
@@ -153,8 +154,10 @@ def voc_train_loop(paths: Paths, model: WaveRNN, loss_func, optimizer, train_set
         save_checkpoint('voc', paths, model, optimizer, is_silent=True)
         model.log(paths.voc_log, msg)
         print(' ')
-        if step %1000 ==0:
+        if step %1000 < step-prev_step:
           os.system('./save_wavernn.sh')
+        prev_step = step
+       
 
 if __name__ == "__main__":
     main()
