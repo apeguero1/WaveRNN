@@ -14,6 +14,7 @@ import argparse
 from utils import data_parallel_workaround
 from utils.checkpoints import save_checkpoint, restore_checkpoint
 import os
+import tarfile
 
 def main():
 
@@ -154,8 +155,17 @@ def voc_train_loop(paths: Paths, model: WaveRNN, loss_func, optimizer, train_set
         save_checkpoint('voc', paths, model, optimizer, is_silent=True)
         model.log(paths.voc_log, msg)
         print(' ')
-        if step %1000 < step-prev_step:
-          os.system('./save_wavernn.sh')
+        
+        if hp.gdrive_save and (step % hp.voc_gdrive_save_every < step-prev_step):
+          tarfilename = hp.voc_model_id+'.tar'
+          print('taring model %s to %s'%(hp.voc_model_id,tarfilename) )
+          tar = tarfile.open(tarfilename, "w")
+          tar.add(paths.voc_checkpoints)
+          tar.close()
+          print('copying to %s'%(hp.gdrive_path))
+          shutil.copy(tarfilename,hp.gdrive_path )
+          print('gdrive save complete')
+
         prev_step = step
        
 

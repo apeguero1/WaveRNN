@@ -2,13 +2,19 @@
 # CONFIG -----------------------------------------------------------------------------------------------------------#
 
 # Here are the input and output data paths (Note: you can override wav_path in preprocess.py)
-wav_path = 'transcript/Selena_Gomez'
+#wav_path = 'transcript/Selena_Gomez'
+wav_path = 'combined_transcript/sg_37min'
 data_path = 'data/'
 
 # model ids are separate - that way you can use a new tts with an old wavernn and vice versa
 # NB: expect undefined behaviour if models were trained on different DSP settings
-voc_model_id = 'ljspeech_mol'
-tts_model_id = 'ljspeech_lsa_smooth_attention'
+#voc_model_id = 'ljspeech_mol'
+#tts_model_id = 'ljspeech_lsa_smooth_attention'
+
+tts_model_id = 'tts_selena_transfer_37min'
+voc_model_id = 'voc_selena_transfer_37min'
+gdrive_save = True
+gdrive_path = '/content/drive/My Drive/djai/tar/tts_voc'
 
 # set this to True if you are only interested in WaveRNN
 ignore_tts = False
@@ -47,6 +53,7 @@ voc_res_blocks = 10
 voc_batch_size = 32
 voc_lr = 1e-4
 voc_checkpoint_every = 25_000
+voc_gdrive_save_every = 2_000
 voc_gen_at_checkpoint = 5           # number of samples to generate at each checkpoint
 voc_total_steps = 1_000_000         # Total number of training steps
 voc_test_samples = 50               # How many unseen samples to put aside for testing
@@ -87,9 +94,10 @@ tts_schedule = [(7,  1e-3,  10_000,  32),   # progressive training schedule
                 (2,  1e-4, 350_000,  8)]
 
 tts_max_mel_len = 1250              # if you have a couple of extremely long spectrograms you might want to use this
-tts_bin_lengths = False              # bins the spectrogram lengths before sampling in data loader - speeds up training
+tts_bin_lengths = True              # bins the spectrogram lengths before sampling in data loader - speeds up training
 tts_clip_grad_norm = 1.0            # clips the gradient norm to prevent explosion - set to None if not needed
 tts_checkpoint_every = 25_000        # checkpoints the model every X steps
+tts_gdrive_save_every = 2_000
 # TODO: tts_phoneme_prob = 0.0              # [0 <-> 1] probability for feeding model phonemes vrs graphemes
 
 

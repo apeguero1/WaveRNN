@@ -15,7 +15,8 @@ import time
 import numpy as np
 import sys
 from utils.checkpoints import save_checkpoint, restore_checkpoint
-
+import tarfile
+import shutil
 
 def np_now(x: torch.Tensor): return x.detach().cpu().numpy()
 
@@ -174,8 +175,17 @@ def tts_train_loop(paths: Paths, model: Tacotron, optimizer, train_set, lr, trai
         model.log(paths.tts_log, msg)
         print(' ')
                                                                        
-        if step %1000 < step-prev_step:
-          os.system('./save_tacotron.sh')                                                          
+        if hp.gdrive_save and (step % hp.tts_gdrive_save_every < step-prev_step ):
+          tarfilename = hp.tts_model_id+'.tar'
+          print('taring model %s to %s'%(hp.tts_model_id,tarfilename) )
+          tar = tarfile.open(tarfilename, "w")
+          tar.add(paths.tts_checkpoints)
+          tar.close()
+          print('copying to %s'%(hp.gdrive_path))
+          shutil.copy(tarfilename,hp.gdrive_path )
+          print('gdrive save complete')
+          #os.system('./save_tacotron.sh')                                                          
+
         prev_step = step
                                                                  
 
