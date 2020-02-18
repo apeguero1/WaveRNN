@@ -7,7 +7,6 @@ import torch
 import argparse
 from pathlib import Path
 
-
 def gen_testset(model: WaveRNN, test_set, samples, batched, target, overlap, save_path: Path):
 
     k = model.get_step() // 1000
